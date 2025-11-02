@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量子跃迁者 - Quantum Jumper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #0a0a2e 0%, #6a4c93 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .quantum-glow {
+            text-shadow: 0 0 10px #00d9ff, 0 0 20px #00d9ff, 0 0 30px #00d9ff;
+        }
+        
+        .dimension-button {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .dimension-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px currentColor;
+        }
+        
+        .dimension-button.active {
+            border-color: currentColor;
+            box-shadow: 0 0 30px currentColor;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .game-canvas {
+            border: 2px solid #00d9ff;
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+            background: radial-gradient(circle at center, rgba(10, 10, 46, 0.9) 0%, rgba(106, 76, 147, 0.7) 100%);
+        }
+        
+        .hologram-panel {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .energy-bar {
+            background: linear-gradient(90deg, #ff6b35 0%, #00d9ff 100%);
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00d9ff;
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10px) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        .title-font {
+            font-family: 'Orbitron', 'Noto Sans SC', sans-serif;
+            font-weight: 900;
+        }
+        
+        .quantum-button {
+            background: linear-gradient(45deg, rgba(0, 217, 255, 0.2), rgba(106, 76, 147, 0.2));
+            border: 1px solid rgba(0, 217, 255, 0.5);
+            color: #00d9ff;
+            transition: all 0.3s ease;
+        }
+        
+        .quantum-button:hover {
+            background: linear-gradient(45deg, rgba(0, 217, 255, 0.3), rgba(106, 76, 147, 0.3));
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- 浮动粒子背景 -->
+    <div class="floating-particles" id="particles"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 right-0 z-50 hologram-panel">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="title-font text-2xl quantum-glow">量子跃迁者</h1>
+                <div class="flex space-x-6">
+                    <a href="instructions.html" class="quantum-button px-4 py-2 rounded-lg">游戏说明</a>
+                    <button id="settingsBtn" class="quantum-button px-4 py-2 rounded-lg">设置</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 主游戏区域 -->
+    <div class="pt-20 min-h-screen flex items-center justify-center">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                
+                <!-- 游戏画布 -->
+                <div class="lg:col-span-3">
+                    <div class="relative">
+                        <canvas id="gameCanvas" class="game-canvas w-full" width="800" height="600"></canvas>
+                        
+                        <!-- 游戏覆盖层 -->
+                        <div id="gameOverlay" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div class="text-center">
+                                <h2 class="title-font text-4xl quantum-glow mb-6">量子跃迁者</h2>
+                                <p class="text-lg mb-8 opacity-80">在多维空间中挑战你的反应与策略</p>
+                                <button id="startBtn" class="quantum-button px-8 py-4 rounded-lg text-xl font-bold">开始游戏</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 暂停菜单 -->
+                        <div id="pauseMenu" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                            <div class="hologram-panel p-8 rounded-lg text-center">
+                                <h3 class="title-font text-2xl quantum-glow mb-6">游戏暂停</h3>
+                                <div class="space-y-4">
+                                    <button id="resumeBtn" class="quantum-button w-full py-3 rounded-lg">继续游戏</button>
+                                    <button id="restartBtn" class="quantum-button w-full py-3 rounded-lg">重新开始</button>
+                                    <button id="quitBtn" class="quantum-button w-full py-3 rounded-lg">返回主菜单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 控制面板 -->
+                <div class="space-y-6">
+                    <!-- 维度切换器 -->
+                    <div class="hologram-panel p-6 rounded-lg">
+                        <h3 class="title-font text-lg quantum-glow mb-4">维度控制</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="dimension-button bg-blue-600 text-white p-4 rounded-lg text-center active" data-dimension="0">
+                                <div class="text-2xl mb-2">🌌</div>
+                                <div class="text-sm">正常维度</div>
+                                <div class="text-xs opacity-70">1</div>
+                            </button>
+                            <button class="dimension-button bg-purple-600 text-white p-4 rounded-lg text-center" data-dimension="1">
+                                <div class="text-2xl mb-2">🔄</div>
+                                <div class="text-sm">反重力</div>
+                                <div class="text-xs opacity-70">2</div>
+                            </button>
+                            <button class="dimension-button bg-cyan-600 text-white p-4 rounded-lg text-center" data-dimension="2">
+                                <div class="text-2xl mb-2">⏱️</div>
+                                <div class="text-sm">时间扭曲</div>
+                                <div class="text-xs opacity-70">3</div>
+                            </button>
+                            <button class="dimension-button bg-orange-600 text-white p-4 rounded-lg text-center" data-dimension="3">
+                                <div class="text-2xl mb-2">⚡</div>
+                                <div class="text-sm">能量场</div>
+                                <div class="text-xs opacity-70">4</div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 游戏状态 -->
+                    <div class="hologram-panel p-6 rounded-lg">
+                        <h3 class="title-font text-lg quantum-glow mb-4">游戏状态</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span>关卡</span>
+                                    <span id="currentLevel">1</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span>量子碎片</span>
+                                    <span id="quantumShards">0</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span>能量</span>
+                                    <span id="energyValue">100</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div id="energyBar" class="energy-bar w-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作提示 -->
+                    <div class="hologram-panel p-6 rounded-lg">
+                        <h3 class="title-font text-lg quantum-glow mb-4">操作提示</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="opacity-70">移动:</span>
+                                <span>WASD / 方向键</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">切换维度:</span>
+                                <span>1-4 / 鼠标滚轮</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">快速切换:</span>
+                                <span>空格键</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">暂停:</span>
+                                <span>ESC键</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 设置模态框 -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="hologram-panel p-8 rounded-lg max-w-md w-full mx-4">
+            <h3 class="title-font text-2xl quantum-glow mb-6">游戏设置</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm mb-2">音效音量</label>
+                    <input type="range" id="sfxVolume" min="0" max="100" value="70" class="w-full">
+                </div>
+                <div>
+                    <label class="block text-sm mb-2">音乐音量</label>
+                    <input type="range" id="musicVolume" min="0" max="100" value="50" class="w-full">
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="particleEffects" checked class="mr-2">
+                    <label for="particleEffects">粒子效果</label>
+                </div>
+            </div>
+            <div class="flex space-x-4 mt-6">
+                <button id="closeSettings" class="quantum-button flex-1 py-2 rounded-lg">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="main.js"></script>
+</body>
+</html>
