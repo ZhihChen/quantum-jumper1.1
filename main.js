@@ -679,9 +679,17 @@ class QuantumJumper {
             this.player.vx *= 0.8; // 摩擦力
         }
         
-        // 跳跃
+        // 跳跃 - 根据当前维度的重力方向调整跳跃方向
         if ((this.keys['w'] || this.keys['arrowup'] || this.keys[' ']) && this.player.onGround) {
-            this.player.vy = -12;
+            // 获取当前维度信息
+            const dimension = this.dimensions[this.currentDimension];
+            
+            // 根据重力方向决定跳跃方向
+            // 正重力模式：向上跳（负的vy值）
+            // 反重力模式：向下跳（正的vy值）
+            const jumpForce = dimension.gravity > 0 ? -12 : 12;
+            
+            this.player.vy = jumpForce;
             this.player.onGround = false;
             this.playSound('playerJump');
         }
