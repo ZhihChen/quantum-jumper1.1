@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏说明 - 量子跃迁者</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #0a0a2e 0%, #6a4c93 100%);
+            min-height: 100vh;
+        }
+        
+        .quantum-glow {
+            text-shadow: 0 0 10px #00d9ff, 0 0 20px #00d9ff, 0 0 30px #00d9ff;
+        }
+        
+        .hologram-panel {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .quantum-button {
+            background: linear-gradient(45deg, rgba(0, 217, 255, 0.2), rgba(106, 76, 147, 0.2));
+            border: 1px solid rgba(0, 217, 255, 0.5);
+            color: #00d9ff;
+            transition: all 0.3s ease;
+        }
+        
+        .quantum-button:hover {
+            background: linear-gradient(45deg, rgba(0, 217, 255, 0.3), rgba(106, 76, 147, 0.3));
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .title-font {
+            font-family: 'Orbitron', 'Noto Sans SC', sans-serif;
+            font-weight: 900;
+        }
+        
+        .dimension-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .dimension-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+        
+        .normal-dimension { border-color: #3b82f6; }
+        .anti-gravity { border-color: #8b5cf6; }
+        .time-warp { border-color: #06b6d4; }
+        .energy-field { border-color: #f97316; }
+        
+        .key-display {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+        }
+        
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00d9ff;
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10px) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- 浮动粒子背景 -->
+    <div class="floating-particles" id="particles"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 right-0 z-50 hologram-panel">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="title-font text-2xl quantum-glow">量子跃迁者</h1>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="quantum-button px-4 py-2 rounded-lg">返回游戏</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 主要内容 -->
+    <div class="pt-20 min-h-screen">
+        <div class="container mx-auto px-6 py-12">
+            <!-- 标题区域 -->
+            <div class="text-center mb-16">
+                <h1 class="title-font text-6xl quantum-glow mb-6">游戏说明</h1>
+                <p class="text-xl opacity-80 max-w-3xl mx-auto">
+                    掌握量子跃迁的艺术，在多维空间中挑战你的反应与策略极限
+                </p>
+            </div>
+            
+            <!-- 游戏概述 -->
+            <div class="hologram-panel p-8 rounded-lg mb-12">
+                <h2 class="title-font text-3xl quantum-glow mb-6">游戏概述</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="text-lg leading-relaxed mb-4">
+                            《量子跃迁者》是一款创新的多维度解谜动作游戏。你将扮演一名量子探险者，
+                            掌握在不同维度间跳跃的能力，利用每个维度独特的物理规则来解决越来越复杂的挑战。
+                        </p>
+                        <p class="text-lg leading-relaxed">
+                            游戏融合了反应挑战、解谜元素、记忆训练和策略规划，为你带来前所未有的游戏体验。
+                            随着关卡的推进，你将面临更多维度的组合和更复杂的挑战。
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-64 h-64 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-8xl">
+                            🌌
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 维度系统 -->
+            <div class="mb-12">
+                <h2 class="title-font text-3xl quantum-glow mb-8 text-center">维度系统</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- 正常维度 -->
+                    <div class="dimension-card hologram-panel p-6 rounded-lg normal-dimension">
+                        <div class="text-center mb-4">
+                            <div class="text-4xl mb-2">🌌</div>
+                            <h3 class="title-font text-xl quantum-glow">正常维度</h3>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="opacity-70">重力:</span>
+                                <span>标准向下</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">时间流速:</span>
+                                <span>正常</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">特殊效果:</span>
+                                <span>无</span>
+                            </div>
+                        </div>
+                        <p class="text-sm mt-4 opacity-80">
+                            基础的物理维度，适合初学者熟悉游戏操作。
+                        </p>
+                    </div>
+                    
+                    <!-- 反重力维度 -->
+                    <div class="dimension-card hologram-panel p-6 rounded-lg anti-gravity">
+                        <div class="text-center mb-4">
+                            <div class="text-4xl mb-2">🔄</div>
+                            <h3 class="title-font text-xl quantum-glow">反重力维度</h3>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="opacity-70">重力:</span>
+                                <span>向上</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">时间流速:</span>
+                                <span>正常</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">特殊效果:</span>
+                                <span>反转坠落</span>
+                            </div>
+                        </div>
+                        <p class="text-sm mt-4 opacity-80">
+                            重力方向反转，需要重新思考移动策略。
+                        </p>
+                    </div>
+                    
+                    <!-- 时间扭曲维度 -->
+                    <div class="dimension-card hologram-panel p-6 rounded-lg time-warp">
+                        <div class="text-center mb-4">
+                            <div class="text-4xl mb-2">⏱️</div>
+                            <h3 class="title-font text-xl quantum-glow">时间扭曲维度</h3>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="opacity-70">重力:</span>
+                                <span>减弱</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">时间流速:</span>
+                                <span>50%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">特殊效果:</span>
+                                <span>子弹时间</span>
+                            </div>
+                        </div>
+                        <p class="text-sm mt-4 opacity-80">
+                            时间变慢，给你更多反应时间来应对复杂情况。
+                        </p>
+                    </div>
+                    
+                    <!-- 能量场维度 -->
+                    <div class="dimension-card hologram-panel p-6 rounded-lg energy-field">
+                        <div class="text-center mb-4">
+                            <div class="text-4xl mb-2">⚡</div>
+                            <h3 class="title-font text-xl quantum-glow">能量场维度</h3>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="opacity-70">重力:</span>
+                                <span>标准</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">时间流速:</span>
+                                <span>正常</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">特殊效果:</span>
+                                <span>能量推动</span>
+                            </div>
+                        </div>
+                        <p class="text-sm mt-4 opacity-80">
+                            存在动态能量场，会影响你的移动轨迹。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 操作指南 -->
+            <div class="hologram-panel p-8 rounded-lg mb-12">
+                <h2 class="title-font text-3xl quantum-glow mb-8 text-center">操作指南</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- 基础操作 -->
+                    <div>
+                        <h3 class="title-font text-xl quantum-glow mb-4">基础操作</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>向左移动</span>
+                                <div class="key-display">A</div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>向右移动</span>
+                                <div class="key-display">D</div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>跳跃</span>
+                                <div class="key-display">W / 空格</div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>暂停游戏</span>
+                                <div class="key-display">ESC</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 维度切换 -->
+                    <div>
+                        <h3 class="title-font text-xl quantum-glow mb-4">维度切换</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>正常维度</span>
+                                <div class="key-display">1</div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>反重力维度</span>
+                                <div class="key-display">2</div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>时间扭曲维度</span>
+                                <div class="key-display">3</div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>能量场维度</span>
+                                <div class="key-display">4</div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>循环切换</span>
+                                <div class="key-display">鼠标滚轮</div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white bg-opacity-5 rounded-lg">
+                                <span>快速切换</span>
+                                <div class="key-display">空格键</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 游戏元素 -->
+            <div class="hologram-panel p-8 rounded-lg mb-12">
+                <h2 class="title-font text-3xl quantum-glow mb-8 text-center">游戏元素</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">💎</div>
+                        <h3 class="title-font text-lg quantum-glow mb-2">量子碎片</h3>
+                        <p class="text-sm opacity-80">
+                            收集这些发光的晶体来解锁新能力和通关关卡。
+                        </p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">⚡</div>
+                        <h3 class="title-font text-lg quantum-glow mb-2">危险区域</h3>
+                        <p class="text-sm opacity-80">
+                            避开这些致命的能量场，接触会造成伤害。
+                        </p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">🌀</div>
+                        <h3 class="title-font text-lg quantum-glow mb-2">传送门</h3>
+                        <p class="text-sm opacity-80">
+                            特殊的传送装置，可以瞬间移动到不同位置。
+                        </p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">🔧</div>
+                        <h3 class="title-font text-lg quantum-glow mb-2">机关装置</h3>
+                        <p class="text-sm opacity-80">
+                            需要特定维度才能激活的机关和装置。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 游戏技巧 -->
+            <div class="hologram-panel p-8 rounded-lg mb-12">
+                <h2 class="title-font text-3xl quantum-glow mb-8 text-center">进阶技巧</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="title-font text-xl quantum-glow mb-4">基础策略</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-cyan-400 mr-2">•</span>
+                                <span>在进入新关卡时先观察环境，识别不同维度的平台和障碍物</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-cyan-400 mr-2">•</span>
+                                <span>优先收集容易获得的量子碎片，为后续挑战储备能量</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-cyan-400 mr-2">•</span>
+                                <span>在危险区域使用时间扭曲维度，获得更多反应时间</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-cyan-400 mr-2">•</span>
+                                <span>熟练掌握快速切换，在紧急情况下能够迅速应对</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="title-font text-xl quantum-glow mb-4">高级技巧</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-orange-400 mr-2">•</span>
+                                <span>利用能量场维度的推力效果到达难以企及的位置</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-orange-400 mr-2">•</span>
+                                <span>在反重力维度中，向上"坠落"可以到达高处平台</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-orange-400 mr-2">•</span>
+                                <span>组合使用多个维度的特性来解决复杂谜题</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-orange-400 mr-2">•</span>
+                                <span>记住维度切换的顺序，在高压情况下快速执行</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 常见问题 -->
+            <div class="hologram-panel p-8 rounded-lg">
+                <h2 class="title-font text-3xl quantum-glow mb-8 text-center">常见问题</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-bold mb-2 quantum-glow">Q: 为什么有些平台看不到？</h3>
+                        <p class="opacity-80">
+                            A: 某些平台只在特定维度中可见。尝试切换不同的维度来发现隐藏的路径和平台。
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-bold mb-2 quantum-glow">Q: 能量用完了怎么办？</h3>
+                        <p class="opacity-80">
+                            A: 收集量子碎片可以恢复能量。如果能量耗尽，你需要重新开始当前关卡。
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-bold mb-2 quantum-glow">Q: 如何解锁新关卡？</h3>
+                        <p class="opacity-80">
+                            A: 完成当前关卡的所有挑战并收集足够的量子碎片即可解锁下一关。
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-bold mb-2 quantum-glow">Q: 游戏支持手柄吗？</h3>
+                        <p class="opacity-80">
+                            A: 目前版本主要支持键盘和鼠标操作，未来版本将添加手柄支持。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部 -->
+    <footer class="hologram-panel mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p class="opacity-60">
+                © 2025 [ACE]量子跃迁者 - 在多维空间中探索无限可能
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // 生成浮动粒子效果
+        function generateParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            setInterval(() => {
+                if (particlesContainer.children.length < 15) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 6 + 's';
+                    particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+                    
+                    particlesContainer.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 10000);
+                }
+            }, 800);
+        }
+        
+        // 页面加载时生成粒子
+        document.addEventListener('DOMContentLoaded', generateParticles);
+    </script>
+</body>
+</html>
