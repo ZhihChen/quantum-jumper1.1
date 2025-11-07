@@ -19,7 +19,7 @@ class QuantumJumper {
         this.dimensions = [
             { name: '正常维度', color: '#3b82f6', gravity: 0.5, timeScale: 1 },
             { name: '反重力', color: '#8b5cf6', gravity: -0.5, timeScale: 1 },
-            { name: '时间扭曲', color: '#06b6d4', gravity: 0.3, timeScale: 0.5 },
+            { name: '时间扭曲', color: '#06b6d4', gravity: 0.6, timeScale: 2 },
             { name: '能量场', color: '#f97316', gravity: 0.5, timeScale: 1, forceField: true }
         ];
         
@@ -50,6 +50,9 @@ class QuantumJumper {
         this.musicVolume = 0.5;
         this.sfxVolume = 0.7;
         this.backgroundMusic = null;
+        
+        // 关卡完成状态标志
+        this.isLevelComplete = false;
         
         // 输入处理
         this.keys = {};
@@ -660,7 +663,7 @@ class QuantumJumper {
         }
         
         // 生成收集品
-        const numCollectibles = 3 + Math.floor(level / 2);
+        const numCollectibles = Math.max(1, 3 + Math.floor(level / 2)); // 确保至少有一个收集品
         for (let i = 0; i < numCollectibles; i++) {
             this.collectibles.push({
                 x: 150 + i * 200 + Math.random() * 100,
@@ -734,14 +737,22 @@ class QuantumJumper {
         // 获取当前维度信息
         const dimension = this.dimensions[this.currentDimension];
         
-        // 应用重力
-        this.player.vy += dimension.gravity;
+        // 应用重力 - 时间扭曲模式下上升时加速度变为一半，下落时加速度变为4倍
+        let gravityMultiplier = 1;
+        if (this.currentDimension === 2) { // 时间扭曲模式
+            if (this.player.vy > 0) { // 下落时
+                gravityMultiplier = 4;
+            } else if (this.player.vy < 0) { // 上升时
+                gravityMultiplier = 0.5;
+            }
+        }
+        this.player.vy += dimension.gravity * gravityMultiplier;
         
         // 能量场效果
         if (dimension.forceField) {
             // 模拟能量场推动效果
-            this.player.vx += Math.sin(Date.now() * 0.001) * 0.1;
-            this.player.vy += Math.cos(Date.now() * 0.0015) * 0.1;
+            this.player.vx += Math.sin(Date.now() * 0.001) * 0.15; // 增加到原来的1.5倍
+            this.player.vy += Math.cos(Date.now() * 0.0015) * 0.15; // 增加到原来的1.5倍
         }
         
         // 更新位置
@@ -818,17 +829,53 @@ class QuantumJumper {
         // 平台碰撞
         this.platforms.forEach(platform => {
             if (platform.dimension === this.currentDimension || platform.dimension === undefined) {
-                if (this.isColliding(this.player, platform)) {
-                    const dimension = this.dimensions[this.currentDimension];
+                // 更精确的碰撞检测，考虑高速穿透问题
+                const dimension = this.dimensions[this.currentDimension];
+                
+                // 标准重力模式：玩家从上方落在平台上
+                if (dimension.gravity > 0) {
+                    // 预测玩家下一帧的位置，防止高速穿透
+                    const nextY = this.player.y + this.player.vy;
+                    const nextBottom = nextY + this.player.height;
                     
-                    // 标准重力模式：玩家从上方落在平台上
-                    if (this.player.vy > 0 && this.player.y < platform.y) {
+                    // 检查玩家是否会在下一帧落在平台上
+                    if (this.player.vy > 0 && 
+                        nextBottom >= platform.y && 
+                        this.player.y + this.player.height <= platform.y &&
+                        this.player.x < platform.x + platform.width && 
+                        this.player.x + this.player.width > platform.x) {
+                        
+                        // 精确放置在平台上
                         this.player.y = platform.y - this.player.height;
                         this.player.vy = 0;
                         this.player.onGround = true;
                     }
-                    // 反重力模式：玩家从下方落在平台上
-                    else if (dimension.gravity < 0 && this.player.vy < 0 && this.player.y > platform.y) {
+                    // 传统的矩形碰撞检测作为后备
+                    else if (this.isColliding(this.player, platform) && this.player.vy > 0 && this.player.y < platform.y) {
+                        this.player.y = platform.y - this.player.height;
+                        this.player.vy = 0;
+                        this.player.onGround = true;
+                    }
+                }
+                // 反重力模式：玩家从下方落在平台上
+                else if (dimension.gravity < 0) {
+                    // 预测玩家下一帧的位置，防止高速穿透
+                    const nextY = this.player.y + this.player.vy;
+                    
+                    // 检查玩家是否会在下一帧落在平台上
+                    if (this.player.vy < 0 && 
+                        nextY <= platform.y + platform.height && 
+                        this.player.y >= platform.y + platform.height &&
+                        this.player.x < platform.x + platform.width && 
+                        this.player.x + this.player.width > platform.x) {
+                        
+                        // 精确放置在平台上
+                        this.player.y = platform.y + platform.height;
+                        this.player.vy = 0;
+                        this.player.onGround = true;
+                    }
+                    // 传统的矩形碰撞检测作为后备
+                    else if (this.isColliding(this.player, platform) && this.player.vy < 0 && this.player.y > platform.y) {
                         this.player.y = platform.y + platform.height;
                         this.player.vy = 0;
                         this.player.onGround = true;
@@ -960,8 +1007,21 @@ class QuantumJumper {
     }
     
     checkWinCondition() {
-        const allCollected = this.collectibles.every(c => c.collected);
-        if (allCollected && this.collectibles.length > 0) {
+        // 防止重复触发胜利条件
+        if (this.isLevelComplete) return;
+        
+        // 检查屏幕可视区域内是否还有未收集的碎片
+        const visibleCollectibles = this.collectibles.filter(c => {
+            // 检查碎片是否在屏幕可视区域内（考虑到玩家移动范围）
+            const isVisible = c.x >= 0 && c.x <= this.canvas.width && 
+                            c.y >= 0 && c.y <= this.canvas.height;
+            return isVisible && !c.collected;
+        });
+        
+        // 如果屏幕可视区域内没有未收集的碎片，就算胜利
+        // 同时确保关卡中确实生成了收集品
+        if (visibleCollectibles.length === 0 && this.collectibles.length > 0) {
+            this.isLevelComplete = true;
             this.showLevelComplete();
             setTimeout(() => {
                 this.nextLevel();
@@ -988,6 +1048,7 @@ class QuantumJumper {
     nextLevel() {
         this.currentLevel++;
         this.energy = this.maxEnergy; // 恢复能量
+        this.isLevelComplete = false; // 重置关卡完成状态
         this.loadLevel(this.currentLevel);
         this.resetPlayer();
         this.updateUI();
