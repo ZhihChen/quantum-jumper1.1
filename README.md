@@ -30,7 +30,7 @@
    ```bash
    python -m http.server 8000
    ```
-4. 在浏览器中访问 https://zhihchen.github.io/quantum-jumper2.0/
+4. 在浏览器中访问 https://zhihchen.github.io/quantum-jumper1.1/
 
 ## 游戏控制
 
@@ -90,5 +90,6 @@
 
 
 希望你喜欢这款游戏！如有问题或建议，请提交issue。
+
 
 
